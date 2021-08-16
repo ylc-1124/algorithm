@@ -3,7 +3,7 @@ package com.ylc.sort;
 /**
  * 选择排序
  */
-public class SelectionSort extends Sort{
+public class SelectionSort<E extends Comparable<E>> extends Sort<E> {
 
     @Override
     protected void sort() {

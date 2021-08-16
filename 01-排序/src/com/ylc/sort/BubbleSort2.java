@@ -3,7 +3,7 @@ package com.ylc.sort;
 /**
  * 冒泡排序针对 提前排序 情况优化
  */
-public class BubbleSort2 extends Sort {
+public class BubbleSort2<E extends Comparable<E>> extends Sort<E>  {
     @Override
     protected void sort() {
         for (int end = array.length - 1; end > 0; end--) {
