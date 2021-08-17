@@ -26,6 +26,7 @@ public class Main {
                 , new SelectionSort()
                 , new QuickSort()
                 , new MergeSort()
+                , new ShellSort()
                 , new HeapSort());
 
     }
