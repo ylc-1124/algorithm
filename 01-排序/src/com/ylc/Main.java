@@ -24,12 +24,13 @@ public class Main {
                 , new InsertionSort2()
                 , new InsertionSort3()
                 , new SelectionSort()
+                , new QuickSort()
                 , new MergeSort()
                 , new HeapSort());
 
     }
 
-    static void testSorts(Integer[] array,Sort... sorts) {
+    static void testSorts(Integer[] array, Sort... sorts) {
         for (Sort sort : sorts) {
             Integer[] newArray = Integers.copy(array);
             sort.sort(newArray);
