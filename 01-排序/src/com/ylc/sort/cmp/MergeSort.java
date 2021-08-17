@@ -1,4 +1,6 @@
-package com.ylc.sort;
+package com.ylc.sort.cmp;
+
+import com.ylc.sort.Sort;
 
 /**
  * 归并排序

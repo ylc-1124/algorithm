@@ -1,6 +1,8 @@
 package com.ylc;
 
-import com.ylc.sort.*;
+import com.ylc.sort.CountingSort;
+import com.ylc.sort.Sort;
+import com.ylc.sort.cmp.*;
 import com.ylc.tools.Asserts;
 import com.ylc.tools.Integers;
 
@@ -15,10 +17,11 @@ public class Main {
         Asserts.test(BinarySearch.search(array,15)==7);
         Asserts.test(BinarySearch.search(array,8)==5);
 */
-        Integer[] array = Integers.random(10000, 1, 20000);
+        Integer[] array = {7, 3, 8, 6, 7, 4, 5};
 
         //测试任意种排序算法的性能
         testSorts(array
+                , new CountingSort()
                 , new BubbleSort3()
                 , new InsertionSort1()
                 , new InsertionSort2()

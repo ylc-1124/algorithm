@@ -1,4 +1,6 @@
-package com.ylc.sort;
+package com.ylc.sort.cmp;
+
+import com.ylc.sort.Sort;
 
 public class QuickSort<E extends Comparable<E>> extends Sort<E> {
     @Override
