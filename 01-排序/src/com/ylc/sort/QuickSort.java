@@ -8,9 +8,6 @@ public class QuickSort<E extends Comparable<E>> extends Sort<E> {
 
     /**
      * 对 [ begin , end )范围的元素进行快速排序
-     *
-     * @param begin
-     * @param end
      */
     private void sort(int begin, int end) {
         if (end - begin < 2) return;
@@ -26,11 +23,11 @@ public class QuickSort<E extends Comparable<E>> extends Sort<E> {
     /**
      * 确定[ begin , end )轴点位置
      *
-     * @param begin
-     * @param end
      * @return 轴点元素的最终位置
      */
     private int pivotIndex(int begin, int end) {
+        //随机选择一个索引的元素和begin位置进行交换
+        swap(begin, begin + ((int) (Math.random() * (end - begin))));
         //备份begin位置的元素
         E privot = array[begin];
         //让end指向最后一个元素
