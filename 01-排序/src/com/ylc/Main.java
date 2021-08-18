@@ -1,6 +1,7 @@
 package com.ylc;
 
 import com.ylc.sort.CountingSort;
+import com.ylc.sort.RadixSort;
 import com.ylc.sort.Sort;
 import com.ylc.sort.cmp.*;
 import com.ylc.tools.Asserts;
@@ -21,16 +22,18 @@ public class Main {
 
         //测试任意种排序算法的性能
         testSorts(array
-                , new CountingSort()
-                , new BubbleSort3()
-                , new InsertionSort1()
-                , new InsertionSort2()
-                , new InsertionSort3()
-                , new SelectionSort()
-                , new QuickSort()
-                , new MergeSort()
-                , new ShellSort()
-                , new HeapSort());
+                , new RadixSort()
+//                , new CountingSort()
+//                , new BubbleSort3()
+//                , new InsertionSort1()
+//                , new InsertionSort2()
+//                , new InsertionSort3()
+//                , new SelectionSort()
+//                , new QuickSort()
+//                , new MergeSort()
+//                , new ShellSort()
+//                , new HeapSort()
+        );
 
     }
 
