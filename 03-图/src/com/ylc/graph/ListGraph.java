@@ -49,11 +49,39 @@ public class ListGraph<V, E> implements Graph<V, E> {
 
     @Override
     public void removeVertex(V v) {
+        Vertex<V, E> vertex = vertices.remove(v);
+        if (vertex == null) return;
 
+        Iterator<Edge<V, E>> outEdgeIterator = vertex.outEdges.iterator();
+        while (outEdgeIterator.hasNext()) {
+            Edge<V, E> edge = outEdgeIterator.next();
+            edge.to.inEdges.remove(edge);
+            //将当前遍历到的元素edge从集合中删掉
+            outEdgeIterator.remove();
+            edges.remove(edge);
+        }
+        Iterator<Edge<V, E>> inEdgeIterator = vertex.inEdges.iterator();
+        while (inEdgeIterator.hasNext()) {
+            Edge<V, E> edge = inEdgeIterator.next();
+            edge.from.outEdges.remove(edge);
+            //将当前遍历到的元素edge从集合中删掉
+            inEdgeIterator.remove();
+            edges.remove(edge);
+        }
     }
 
     @Override
     public void removeEdge(V from, V to) {
+        Vertex<V, E> fromVertex = vertices.get(from);
+        if (fromVertex == null) return;
+        Vertex<V, E> toVertex = vertices.get(to);
+        if (toVertex == null) return;
+
+        Edge<V, E> edge = new Edge<>(fromVertex, toVertex);
+        if (fromVertex.outEdges.remove(edge)) {
+            toVertex.inEdges.remove(edge);
+            edges.remove(edge);
+        }
 
     }
 
@@ -65,6 +93,50 @@ public class ListGraph<V, E> implements Graph<V, E> {
     @Override
     public int VerticesSize() {
         return vertices.size();
+    }
+
+    @Override
+    public void bfs(V begin) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return;
+        Set<Vertex<V, E>> visitedVertices = new HashSet<>();
+        Queue<Vertex<V, E>> queue = new LinkedList<>();
+        queue.offer(beginVertex);
+        visitedVertices.add(beginVertex);
+
+        while (!queue.isEmpty()) {
+            Vertex<V, E> vertex = queue.poll();
+            //do....
+            System.out.println(vertex.value);
+
+            for (Edge<V, E> edge : vertex.outEdges) {
+                if (!visitedVertices.contains(edge.to)) {
+                    queue.offer(edge.to);
+                    visitedVertices.add(edge.to);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void dfs(V begin) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return;
+
+        dfs(beginVertex,new HashSet<>());
+
+    }
+
+    private void dfs(Vertex<V, E> vertex,Set<Vertex<V, E>> visitedVertices) {
+
+        System.out.println(vertex.value);
+        visitedVertices.add(vertex);
+
+        for (Edge<V, E> edge : vertex.outEdges) {
+            if (!visitedVertices.contains(edge.to)) {
+                dfs(edge.to, visitedVertices);
+            }
+        }
     }
 
     private static class Vertex<V, E> {
@@ -129,14 +201,16 @@ public class ListGraph<V, E> implements Graph<V, E> {
     public void print() {
         vertices.forEach((V v, Vertex<V, E> vertex) -> {
             System.out.println(v);
-            System.out.println("out---------------------------");
+            System.out.println("outEdges");
             System.out.println(vertex.outEdges);
-            System.out.println("in----------------------------");
+            System.out.println("inEdges");
             System.out.println(vertex.inEdges);
+            System.out.println("=================================");
         });
         edges.forEach((Edge<V,E> edge)->{
             System.out.println(edge);
         });
+
 
 
     }

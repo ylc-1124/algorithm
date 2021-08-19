@@ -15,4 +15,8 @@ public interface Graph<V, E> {
     int edgeSize();
 
     int VerticesSize();
+
+    void bfs(V begin); //广度优先遍历
+
+    void dfs(V begin);//深度优先搜索
 }
