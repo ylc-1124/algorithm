@@ -1,12 +1,23 @@
 package com.ylc.graph;
 
+import com.ylc.MinHeap;
+
 import java.util.*;
 import java.util.function.Consumer;
 
-public class ListGraph<V, E> implements Graph<V, E> {
+public class ListGraph<V, E> extends Graph<V, E> {
     private Map<V, Vertex<V, E>> vertices = new HashMap<>();
     private Set<Edge<V, E>> edges = new HashSet<>();
+    private Comparator<Edge<V, E>> edgeComparator = (Edge<V, E> e1, Edge<V, E> e2) -> {
+        return weightManager.compare(e1.weight, e2.weight);
+    };
 
+    public ListGraph(WeightManager<E> weightManager) {
+        super(weightManager);
+    }
+
+    public ListGraph() {
+    }
 
     @Override
     public void addVertex(V v) {
@@ -181,6 +192,37 @@ public class ListGraph<V, E> implements Graph<V, E> {
         return list;
     }
 
+    @Override
+    public Set<EdgeInfo<V, E>> mst() {
+        return prim();
+    }
+
+    private Set<EdgeInfo<V, E>> prim() { // Prim算法
+        Iterator<Vertex<V, E>> it = vertices.values().iterator();
+        if (!it.hasNext()) return null;
+        Set<EdgeInfo<V, E>> edgeInfos = new HashSet<>();
+        Set<Vertex<V, E>> addedVertices = new HashSet<>();
+        Vertex<V, E> vertex = it.next(); //从所有顶点中随机取出一个
+        addedVertices.add(vertex);
+
+        MinHeap<Edge<V, E>> heap = new MinHeap<>(vertex.outEdges, edgeComparator);
+
+        int edgeSize = vertices.size() - 1;
+        while (!heap.isEmpty() && edgeInfos.size() < edgeSize) {
+            Edge<V, E> edge = heap.remove();
+            if (addedVertices.contains(edge.to)) continue;
+
+            edgeInfos.add(edge.info());
+
+            addedVertices.add(edge.to);
+            heap.addAll(edge.to.outEdges);
+        }
+        return edgeInfos;
+    }
+
+    private Set<EdgeInfo<V, E>> kruskal() { // Kruskal算法
+        return null;
+    }
 
 /*
     @Override
@@ -309,6 +351,10 @@ public class ListGraph<V, E> implements Graph<V, E> {
                     ", to=" + to +
                     ", weight=" + weight +
                     '}';
+        }
+
+        EdgeInfo<V, E> info() {
+            return new EdgeInfo<>(from.value, to.value, weight);
         }
     }
 
