@@ -3,20 +3,32 @@ package com.ylc;
 import com.ylc.graph.Graph;
 import com.ylc.graph.ListGraph;
 
+import java.util.List;
+
 public class Main {
     public static void main(String[] args) {
-		testDfs();
+		testTopo();
     }
 
 	static void testDfs() {
 		Graph<Object, Double> graph = directedGraph(Data.DFS_02);
-		graph.dfs("a");
+		//graph.dfs("a");
 	}
 
 	static void testBfs() {
 		Graph<Object, Double> graph = directedGraph(Data.BFS_02);
-		graph.bfs(7);
+		graph.bfs(0,(Object obj)->{
+			System.out.println(obj);
+			return obj.equals(2);
+		});
 
+
+	}
+
+	static void testTopo() {
+		Graph<Object, Double> graph = directedGraph(Data.TOPO);
+		List<Object> list = graph.topologicalSort();
+		System.out.println(list);
 	}
 
 	static void test() {
@@ -28,7 +40,7 @@ public class Main {
 		graph.addEdge("v3", "v4", 1);
 		graph.addEdge("v0", "v4", 6);
 
-		graph.bfs("v1");
+		//graph.bfs("v1");
 
 	}
 	/**
