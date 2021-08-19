@@ -117,8 +117,32 @@ public class ListGraph<V, E> implements Graph<V, E> {
             }
         }
     }
-
     @Override
+    public void dfs(V begin) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return;
+
+        Set<Vertex<V, E>> visitedVertices = new HashSet<>();
+        Stack<Vertex<V, E>> stack = new Stack<>();
+        //先访问起点
+        stack.push(beginVertex);
+        visitedVertices.add(beginVertex);
+        System.out.println(beginVertex.value);
+
+        while (!stack.isEmpty()) {
+            Vertex<V, E> vertex = stack.pop();
+
+            for (Edge<V, E> edge : vertex.outEdges) {
+                if (visitedVertices.contains(edge.to)) continue;
+                stack.push(edge.from);
+                stack.push(edge.to);
+                visitedVertices.add(edge.to);
+                System.out.println(edge.to.value);
+                break;
+            }
+        }
+    }
+    /*@Override
     public void dfs(V begin) {
         Vertex<V, E> beginVertex = vertices.get(begin);
         if (beginVertex == null) return;
@@ -137,7 +161,7 @@ public class ListGraph<V, E> implements Graph<V, E> {
                 dfs(edge.to, visitedVertices);
             }
         }
-    }
+    }*/
 
     private static class Vertex<V, E> {
         V value;
