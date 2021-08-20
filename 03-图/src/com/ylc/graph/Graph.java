@@ -1,6 +1,7 @@
 package com.ylc.graph;
 
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +35,8 @@ public abstract class Graph<V, E> {
 
     public abstract void dfs(V begin, VertexVisitor<V> visitor);//深度优先搜索
 
-    public abstract Map<V, E> shortestPath(V begin); //最短路径
+    // public abstract Map<V, E> shortestPath(V begin); //最短路径
+    public abstract Map<V, PathInfo<V, E>> shortestPath(V begin);
 
     public interface VertexVisitor<V> {
         boolean visit(V v);
@@ -44,6 +46,19 @@ public abstract class Graph<V, E> {
         int compare(E w1, E w2);
 
         E add(E w1, E w2);
+    }
+
+    public static class PathInfo<V, E> {
+        protected E weight;
+        protected List<EdgeInfo<V, E>> edgeInfos = new LinkedList<>();
+
+        @Override
+        public String toString() {
+            return "PathInfo{" +
+                    "weight=" + weight +
+                    ", edgeInfos=" + edgeInfos +
+                    '}';
+        }
     }
 
     public abstract List<V> topologicalSort();  //拓扑排序条件：有向无环图

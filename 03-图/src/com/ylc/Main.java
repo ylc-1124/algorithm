@@ -26,8 +26,10 @@ public class Main {
 	static void testSp() {
 		Graph<Object, Double> graph = directedGraph(Data.SP);
 
-		Map<Object, Double> sp = graph.shortestPath("A");
-		System.out.println(sp);
+		Map<Object, Graph.PathInfo<Object, Double>> sp = graph.shortestPath("A");
+		sp.forEach((Object v, Graph.PathInfo<Object, Double> pathInfo)->{
+			System.out.println(v+"-"+pathInfo);
+		});
 	}
 
 	static void testMst() {
