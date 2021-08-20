@@ -1,6 +1,7 @@
 package com.ylc.graph;
 
 import com.ylc.MinHeap;
+import com.ylc.UnionFind;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -194,7 +195,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
     @Override
     public Set<EdgeInfo<V, E>> mst() {
-        return prim();
+        return kruskal();
     }
 
     private Set<EdgeInfo<V, E>> prim() { // Prim算法
@@ -221,7 +222,27 @@ public class ListGraph<V, E> extends Graph<V, E> {
     }
 
     private Set<EdgeInfo<V, E>> kruskal() { // Kruskal算法
-        return null;
+        int edgeSize = vertices.size() - 1;
+        if (edgeSize == -1) return null;
+        Set<EdgeInfo<V, E>> edgeInfos = new HashSet<>();
+        MinHeap<Edge<V, E>> heap = new MinHeap<>(edges, edgeComparator);
+        UnionFind<Vertex<V, E>> uf = new UnionFind<>(); //并查集检验是否成环
+
+        vertices.forEach((V v, Vertex<V, E> vertex) -> { //初始化并查集
+            uf.makeSet(vertex);
+        });
+
+        while (!heap.isEmpty() && edgeInfos.size() < edgeSize) {
+            Edge<V, E> edge = heap.remove();
+
+            //判断最小的边选择是否会有环
+            if (uf.isSame(edge.from,edge.to)) continue;
+
+            edgeInfos.add(edge.info());
+            uf.union(edge.from, edge.to);
+        }
+
+        return edgeInfos;
     }
 
 /*
