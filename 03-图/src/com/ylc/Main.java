@@ -4,6 +4,7 @@ import com.ylc.graph.Graph;
 import com.ylc.graph.ListGraph;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Main {
@@ -19,8 +20,15 @@ public class Main {
 		}
 	};
     public static void main(String[] args) {
-		testMst();
+		testSp();
     }
+
+	static void testSp() {
+		Graph<Object, Double> graph = directedGraph(Data.SP);
+
+		Map<Object, Double> sp = graph.shortestPath("A");
+		System.out.println(sp);
+	}
 
 	static void testMst() {
 		Graph<Object, Double> graph = undirectedGraph(Data.MST_01);

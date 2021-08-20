@@ -2,6 +2,7 @@ package com.ylc.graph;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -32,6 +33,8 @@ public abstract class Graph<V, E> {
     public abstract void bfs(V begin, VertexVisitor<V> visitor); //广度优先遍历
 
     public abstract void dfs(V begin, VertexVisitor<V> visitor);//深度优先搜索
+
+    public abstract Map<V, E> shortestPath(V begin); //最短路径
 
     public interface VertexVisitor<V> {
         boolean visit(V v);
