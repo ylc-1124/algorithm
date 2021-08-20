@@ -46,6 +46,8 @@ public abstract class Graph<V, E> {
         int compare(E w1, E w2);
 
         E add(E w1, E w2);
+
+        E zero();
     }
 
     public static class PathInfo<V, E> {

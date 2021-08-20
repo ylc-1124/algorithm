@@ -163,9 +163,59 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
     @Override
     public Map<V, PathInfo<V, E>> shortestPath(V begin) {
-        return dijkstra(begin);
+        return bellmanFord(begin);
     }
 
+    private Map<V, PathInfo<V, E>> bellmanFord(V begin) {
+        Vertex<V, E> beginVertex = vertices.get(begin);
+        if (beginVertex == null) return null;
+
+        Map<V, PathInfo<V, E>> selectedPaths = new HashMap<>();
+        PathInfo<V, E> beginPath = new PathInfo<>();
+        beginPath.weight = weightManager.zero();
+        selectedPaths.put(begin, beginPath);
+
+        int count = vertices.size() - 1;
+        for (int i = 0; i < count; i++) {  //V-1
+            for (Edge<V, E> edge : edges) {
+                PathInfo<V, E> fromPathInfo = selectedPaths.get(edge.from.value);
+                if (fromPathInfo == null) continue;
+                relax(edge, fromPathInfo, selectedPaths);
+            }
+        }
+        for (Edge<V, E> edge : edges) {
+            PathInfo<V, E> fromPathInfo = selectedPaths.get(edge.from.value);
+            if (fromPathInfo == null) continue;
+            if (relax(edge, fromPathInfo, selectedPaths)) {
+                System.out.println("存在负权环");
+                return null;
+            }
+        }
+        selectedPaths.remove(begin);
+        return selectedPaths;
+    }
+
+    private boolean relax(Edge<V, E> edge, PathInfo<V, E> fromPathInfo, Map<V, PathInfo<V, E>> paths) {
+        // 新的可选择的最短路径：  beginVertex 到 edge.from的最短路径 + edge.weight
+        E newWeight = weightManager.add(fromPathInfo.weight, edge.weight);
+        //以前的最短路径 beginVertex 到 edge.to
+        PathInfo<V, E> oldPathInfo = paths.get(edge.to.value);
+        if (oldPathInfo != null
+                && weightManager.compare(newWeight, oldPathInfo.weight) >= 0) return false;
+
+        if (oldPathInfo == null) {
+            oldPathInfo = new PathInfo<>();
+            paths.put(edge.to.value, oldPathInfo);
+        } else {
+            oldPathInfo.edgeInfos.clear();
+        }
+
+        oldPathInfo.weight = newWeight;
+        oldPathInfo.edgeInfos.addAll(fromPathInfo.edgeInfos);
+        oldPathInfo.edgeInfos.add(edge.info());
+
+        return true;
+    }
     private Map<V, PathInfo<V, E>> dijkstra(V begin) { //Dijkstra算法-最短路径
         Vertex<V, E> beginVertex = vertices.get(begin);
         if (beginVertex == null) return null;
@@ -192,7 +242,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
             for (Edge<V, E> edge : minVertex.outEdges) {
                 //如果edge.to已经离开桌面就没必要松弛操作
                 if (selectedPaths.containsKey(edge.to.value)) continue;
-                relax(edge, minPathInfo, paths); //松弛操作
+                relaxForDijkstra(edge, minPathInfo, paths); //松弛操作
 
             }
         }
@@ -201,13 +251,16 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
         return selectedPaths;
     }
+
     /**
      * 松弛操作
      * @param edge  需要进行松弛的边
      * @param fromPathInfo  edge的from顶点的最短路径信息
-     * @param paths  存放其他点（还没有离开桌面的点）的最短路径信息
+     * @param paths  存放其他点（对于Dijkstra来说是还没有离开桌面的点）的最短路径信息
      */
-    private void relax(Edge<V, E> edge,PathInfo<V, E> fromPathInfo,Map<Vertex<V, E>, PathInfo<V, E>> paths) {
+
+
+    private void relaxForDijkstra(Edge<V, E> edge,PathInfo<V, E> fromPathInfo,Map<Vertex<V, E>, PathInfo<V, E>> paths) {
         // 新的可选择的最短路径：  beginVertex 到 edge.from的最短路径 + edge.weight
         E newWeight = weightManager.add(fromPathInfo.weight, edge.weight);
         //以前的最短路径 beginVertex 到 edge.to
@@ -227,44 +280,6 @@ public class ListGraph<V, E> extends Graph<V, E> {
         oldPathInfo.edgeInfos.add(edge.info());
 
     }
-
- /*   @Override
-    public Map<V, E> shortestPath(V begin) {
-        Vertex<V, E> beginVertex = vertices.get(begin);
-        if (beginVertex == null) return null;
-
-        Map<V, E> selectedPaths = new HashMap<>();
-        Map<Vertex<V, E>, E> paths = new HashMap<>();
-        //初始化paths
-        for (Edge<V, E> edge : beginVertex.outEdges) {
-            paths.put(edge.to, edge.weight);
-        }
-
-        while (!paths.isEmpty()) {
-            Map.Entry<Vertex<V, E>, E> minEntry = getMinPath(paths);
-            // minEntry离开桌面
-            Vertex<V, E> minVertex = minEntry.getKey();
-            selectedPaths.put(minVertex.value, minEntry.getValue());
-            paths.remove(minVertex);
-            //对它的outEdges进行松弛操作
-            for (Edge<V, E> edge : minVertex.outEdges) {
-                //如果edge.to已经离开桌面就没必要松弛操作
-                if (selectedPaths.containsKey(edge.to.value)) continue;
-                // 新的可选择的最短路径：  beginVertex 到 edge.from的最短路径 + edge.weight
-                E newWeight = weightManager.add(minEntry.getValue(), edge.weight);
-                //以前的最短路径 beginVertex 到 edge.to
-                E oldWeight = paths.get(edge.to);
-                if (oldWeight == null || weightManager.compare(newWeight, oldWeight) < 0) {
-                    paths.put(edge.to, newWeight);
-                }
-            }
-        }
-        selectedPaths.remove(begin);
-
-
-        return selectedPaths;
-    }*/
-
 
 
     /**
