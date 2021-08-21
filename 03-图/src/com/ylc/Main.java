@@ -29,9 +29,9 @@ public class Main {
     }
 
 	static void testSp() {
-		Graph<Object, Double> graph = directedGraph(Data.NEGATIVE_WEIGHT2);
+		Graph<Object, Double> graph = directedGraph(Data.SP);
 
-		Map<Object, Graph.PathInfo<Object, Double>> sp = graph.shortestPath(0);
+		Map<Object, Graph.PathInfo<Object, Double>> sp = graph.shortestPath("A");
 		if (sp == null) return;
 		sp.forEach((Object v, Graph.PathInfo<Object, Double> pathInfo)->{
 			System.out.println(v+"-"+pathInfo);

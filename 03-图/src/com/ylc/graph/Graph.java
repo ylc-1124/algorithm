@@ -54,6 +54,13 @@ public abstract class Graph<V, E> {
         protected E weight;
         protected List<EdgeInfo<V, E>> edgeInfos = new LinkedList<>();
 
+        public PathInfo(E weight) {
+            this.weight = weight;
+        }
+
+        public PathInfo() {
+        }
+
         @Override
         public String toString() {
             return "PathInfo{" +

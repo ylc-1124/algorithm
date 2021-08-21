@@ -163,7 +163,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
     @Override
     public Map<V, PathInfo<V, E>> shortestPath(V begin) {
-        return bellmanFord(begin);
+        return dijkstra(begin);
     }
 
     private Map<V, PathInfo<V, E>> bellmanFord(V begin) {
@@ -171,9 +171,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
         if (beginVertex == null) return null;
 
         Map<V, PathInfo<V, E>> selectedPaths = new HashMap<>();
-        PathInfo<V, E> beginPath = new PathInfo<>();
-        beginPath.weight = weightManager.zero();
-        selectedPaths.put(begin, beginPath);
+        selectedPaths.put(begin, new PathInfo<>(weightManager.zero()));
 
         int count = vertices.size() - 1;
         for (int i = 0; i < count; i++) {  //V-1
@@ -223,13 +221,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
         Map<V, PathInfo<V, E>> selectedPaths = new HashMap<>();
         Map<Vertex<V, E>, PathInfo<V, E>> paths = new HashMap<>();
         //初始化paths
-        for (Edge<V, E> edge : beginVertex.outEdges) {
-            PathInfo<V, E> pathInfo = new PathInfo<>();
-            pathInfo.weight = edge.weight;
-            pathInfo.edgeInfos.add(edge.info());
-            paths.put(edge.to, pathInfo);
-
-        }
+        paths.put(beginVertex, new PathInfo<>(weightManager.zero()));
 
         while (!paths.isEmpty()) {
             Map.Entry<Vertex<V, E>, PathInfo<V, E>> minEntry = getMinPath(paths);
