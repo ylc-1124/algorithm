@@ -38,6 +38,8 @@ public abstract class Graph<V, E> {
     // public abstract Map<V, E> shortestPath(V begin); //最短路径
     public abstract Map<V, PathInfo<V, E>> shortestPath(V begin);
 
+    public abstract Map<V, Map<V, PathInfo<V, E>>> shortestPath();
+
     public interface VertexVisitor<V> {
         boolean visit(V v);
     }

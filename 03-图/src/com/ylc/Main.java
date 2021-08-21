@@ -25,12 +25,22 @@ public class Main {
 		}
 	};
     public static void main(String[] args) {
-		testSp();
+		testMutiSp();
     }
+
+	static void testMutiSp() {
+		Graph<Object, Double> graph = directedGraph(Data.NEGATIVE_WEIGHT1);
+		Map<Object, Map<Object, Graph.PathInfo<Object, Double>>> sp = graph.shortestPath();
+		sp.forEach((Object from, Map<Object, Graph.PathInfo<Object, Double>> paths) -> {
+			System.out.println(from + "----------------------------");
+			paths.forEach((Object to, Graph.PathInfo<Object, Double> path)->{
+				System.out.println(to+"-"+path);
+			});
+		});
+	}
 
 	static void testSp() {
 		Graph<Object, Double> graph = directedGraph(Data.SP);
-
 		Map<Object, Graph.PathInfo<Object, Double>> sp = graph.shortestPath("A");
 		if (sp == null) return;
 		sp.forEach((Object v, Graph.PathInfo<Object, Double> pathInfo)->{

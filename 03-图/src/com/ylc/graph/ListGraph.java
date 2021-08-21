@@ -166,6 +166,59 @@ public class ListGraph<V, E> extends Graph<V, E> {
         return dijkstra(begin);
     }
 
+    @Override
+    public Map<V, Map<V, PathInfo<V, E>>> shortestPath() {
+        Map<V, Map<V, PathInfo<V, E>>> paths = new HashMap<>();
+        for (Edge<V, E> edge : edges) {
+            Map<V, PathInfo<V, E>> map = paths.get(edge.from.value);
+            if (map == null) {
+                map = new HashMap<>();
+                paths.put(edge.from.value, map);
+            }
+            PathInfo<V, E> pathInfo = new PathInfo<>(edge.weight);
+            pathInfo.edgeInfos.add(edge.info());
+            map.put(edge.to.value, pathInfo);
+        }
+
+        vertices.forEach((V v2, Vertex<V, E> vertex2) -> {
+            vertices.forEach((V v1, Vertex<V, E> vertex1) -> {
+                vertices.forEach((V v3, Vertex<V, E> vertex3) -> {
+                    if (v1.equals(v2) || v1.equals(v3) || v2.equals(v3)) return;
+                    //v1 -> v2
+                    PathInfo<V, E> path12 = getPathInfo(v1, v2, paths);
+                    if (path12 == null) return;
+                    //v2 -> v3
+                    PathInfo<V, E> path23 = getPathInfo(v2, v3, paths);
+                    if (path23 == null) return;
+                    //v1 -> v3
+                    PathInfo<V, E> path13 = getPathInfo(v1, v3, paths);
+
+                    E newWeight = weightManager.add(path12.weight, path23.weight);
+                    if (path13 !=null
+                            && weightManager.compare(newWeight, path13.weight) >= 0) return;
+
+                    if (path13 == null) {
+                        path13 = new PathInfo<>();
+                        paths.get(v1).put(v3, path13);
+                    } else {
+                        path13.edgeInfos.clear();
+                    }
+
+                    path13.weight = newWeight;
+                    path13.edgeInfos.addAll(path12.edgeInfos);
+                    path13.edgeInfos.addAll(path23.edgeInfos);
+
+                });
+            });
+        });
+        return paths;
+    }
+
+    private PathInfo<V, E> getPathInfo(V from, V to, Map<V, Map<V, PathInfo<V, E>>> paths) {
+        Map<V, PathInfo<V, E>> map = paths.get(from);
+        return map == null ? null : map.get(to);
+    }
+
     private Map<V, PathInfo<V, E>> bellmanFord(V begin) {
         Vertex<V, E> beginVertex = vertices.get(begin);
         if (beginVertex == null) return null;
@@ -214,6 +267,7 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
         return true;
     }
+
     private Map<V, PathInfo<V, E>> dijkstra(V begin) { //Dijkstra算法-最短路径
         Vertex<V, E> beginVertex = vertices.get(begin);
         if (beginVertex == null) return null;
@@ -246,13 +300,14 @@ public class ListGraph<V, E> extends Graph<V, E> {
 
     /**
      * 松弛操作
-     * @param edge  需要进行松弛的边
-     * @param fromPathInfo  edge的from顶点的最短路径信息
-     * @param paths  存放其他点（对于Dijkstra来说是还没有离开桌面的点）的最短路径信息
+     *
+     * @param edge         需要进行松弛的边
+     * @param fromPathInfo edge的from顶点的最短路径信息
+     * @param paths        存放其他点（对于Dijkstra来说是还没有离开桌面的点）的最短路径信息
      */
 
 
-    private void relaxForDijkstra(Edge<V, E> edge,PathInfo<V, E> fromPathInfo,Map<Vertex<V, E>, PathInfo<V, E>> paths) {
+    private void relaxForDijkstra(Edge<V, E> edge, PathInfo<V, E> fromPathInfo, Map<Vertex<V, E>, PathInfo<V, E>> paths) {
         // 新的可选择的最短路径：  beginVertex 到 edge.from的最短路径 + edge.weight
         E newWeight = weightManager.add(fromPathInfo.weight, edge.weight);
         //以前的最短路径 beginVertex 到 edge.to
