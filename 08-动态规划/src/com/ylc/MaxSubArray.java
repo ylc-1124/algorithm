@@ -6,10 +6,23 @@ package com.ylc;
 public class MaxSubArray {
     public static void main(String[] args) {
         int[] nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
-        System.out.println(maxSubArray(nums));
+        System.out.println(maxSubArray2(nums));
     }
-
-    static int maxSubArray(int[] nums) {
+    static int maxSubArray2(int[] nums) {
+        if (nums == null || nums.length == 0) return 0;
+        int dp = nums[0];
+        int max = dp;
+        for (int i = 1; i < nums.length; i++) {
+            if (dp <= 0) {
+                dp = nums[i];
+            } else {
+                dp = dp + nums[i];
+            }
+            max = Math.max(dp, max);
+        }
+        return max;
+    }
+    static int maxSubArray1(int[] nums) {
         if (nums == null || nums.length == 0) return 0;
         int[] dp = new int[nums.length];
         dp[0] = nums[0];
