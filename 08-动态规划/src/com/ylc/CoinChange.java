@@ -6,11 +6,28 @@ package com.ylc;
 public class CoinChange {
     public static void main(String[] args) {
 
-        System.out.println(coins2(41));
+        System.out.println(coins3(41));
     }
 
     /**
-     * 记忆化搜索
+     * 递推-自下而上
+     */
+    static int coins3(int n) {
+        if (n < 1) return -1;
+        int[] dp = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            int min = dp[i - 1];
+            if (i >= 5) min = Math.min(dp[i - 5], min);
+            if (i >= 20) min = Math.min(dp[i - 20], min);
+            if (i >= 25) min = Math.min(dp[i - 25], min);
+            dp[i] = min + 1;
+        }
+        return dp[n];
+
+    }
+
+    /**
+     * 记忆化搜索-自顶向下
      */
     static int coins2(int n) {
         if (n < 1) return -1;
