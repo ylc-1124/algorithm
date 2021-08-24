@@ -6,7 +6,7 @@ package com.ylc;
 public class CoinChange {
     public static void main(String[] args) {
 
-      //  System.out.println("需要"+coins4(41)+"张纸币");
+        //  System.out.println("需要"+coins4(41)+"张纸币");
         System.out.println(coins5(41, new int[]{1, 5, 20, 25}));
     }
 
@@ -17,9 +17,15 @@ public class CoinChange {
             int min = Integer.MAX_VALUE;
             for (int face : faces) {
                 if (i < face) continue;
-                min = Math.min(dp[i - face], min);
+                int v = dp[i - face];
+                if (v < 0 || v >= min) continue;
+                min = v;
             }
-            dp[i] = min + 1;
+            if (min == Integer.MAX_VALUE) {
+                dp[i] = -1;
+            } else {
+                dp[i] = min + 1;
+            }
         }
         return dp[n];
     }
@@ -57,11 +63,12 @@ public class CoinChange {
 
     static void print(int[] faces, int n) {
         while (n > 0) {
-            System.out.print(faces[n]+" ");
+            System.out.print(faces[n] + " ");
             n -= faces[n];
         }
         System.out.println();
     }
+
     /**
      * 递推-自下而上
      */
@@ -106,6 +113,7 @@ public class CoinChange {
         }
         return dp[n];
     }
+
     /**
      * 凑到n所需要的最小硬币个数 - 暴力递归，自顶向下调用，出现重叠子问题
      */
