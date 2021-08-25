@@ -5,7 +5,7 @@ package com.ylc;
  */
 public class LCSubstring {
     public static void main(String[] args) {
-        System.out.println(lcs1("ABCBA", "BABCA"));
+        System.out.println(lcs2("ABCBA", "BABCA"));
     }
 
     /**
@@ -27,14 +27,11 @@ public class LCSubstring {
         int[] dp = new int[colsChars.length + 1];
         int max = 0;
         for (int row = 1; row <= rowChars.length; row++) {
-            int cur = 0;
-            for (int col = 1; col <= colsChars.length; col++) {
-                int leftTop = cur;
-                cur = dp[col];
+            for (int col = colsChars.length; col >= 1; col--) {
                 if (chars1[row - 1] != chars2[col - 1]) {
                     dp[col] = 0;
                 } else {
-                    dp[col] = leftTop + 1;
+                    dp[col] = dp[col - 1] + 1;
                     max = Math.max(dp[col], max);
                 }
 
