@@ -5,13 +5,49 @@ package com.ylc;
  */
 public class LCSubstring {
     public static void main(String[] args) {
-        System.out.println(lcs("ABCBA", "BABCA"));
+        System.out.println(lcs1("ABCBA", "BABCA"));
     }
+
+    /**
+     * 用一维数组进行优化
+     */
+    static int lcs2(String str1, String str2) {
+        if (str1 == null || str2 == null) return 0;
+        char[] chars1 = str1.toCharArray();
+        if (chars1.length == 0) return 0;
+        char[] chars2 = str2.toCharArray();
+        if (chars2.length == 0) return 0;
+
+        char[] rowChars = chars1, colsChars = chars2;
+        if (chars1.length < chars2.length) {
+            colsChars = chars1;
+            rowChars = chars2;
+        }
+
+        int[] dp = new int[colsChars.length + 1];
+        int max = 0;
+        for (int row = 1; row <= rowChars.length; row++) {
+            int cur = 0;
+            for (int col = 1; col <= colsChars.length; col++) {
+                int leftTop = cur;
+                cur = dp[col];
+                if (chars1[row - 1] != chars2[col - 1]) {
+                    dp[col] = 0;
+                } else {
+                    dp[col] = leftTop + 1;
+                    max = Math.max(dp[col], max);
+                }
+
+            }
+        }
+        return max;
+    }
+
 
     /**
      * dp[i][j]表示 以str1[i-1]和str2[j-1]结尾的最长公共子串的值
      */
-    static int lcs(String str1, String str2) {
+    static int lcs1(String str1, String str2) {
         if (str1 == null || str2 == null) return 0;
         char[] chars1 = str1.toCharArray();
         if (chars1.length == 0) return 0;

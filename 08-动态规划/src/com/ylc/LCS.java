@@ -37,15 +37,15 @@ public class LCS {
         }
         int[] dp = new int[cols + 1];
 
-        for (int i = 1; i <= rows; i++) {
+        for (int row = 1; row <= rows; row++) {
             int cur = 0;
-            for (int j = 1; j <= cols; j++) {
+            for (int col = 1; col <= cols; col++) {
                 int leftTop = cur;
-                cur = dp[j];
-                if (rowNums[i - 1] == colNums[j - 1]) {
-                    dp[j] = leftTop + 1;
+                cur = dp[col];
+                if (rowNums[row - 1] == colNums[col - 1]) {
+                    dp[col] = leftTop + 1;
                 } else {
-                    dp[j] = Math.max(dp[j], dp[j - 1]);
+                    dp[col] = Math.max(dp[col], dp[col - 1]);
 
                 }
             }
