@@ -28,8 +28,6 @@ public class EightQueues {
             show();
             return;
         }
-
-
         for (int col = 0; col < cols.length; col++) {
             if (isValid(row, col)) {
                 //摆放皇后
